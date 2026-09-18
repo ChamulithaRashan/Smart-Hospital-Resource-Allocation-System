@@ -1,14 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define MAX_PATIENTS 100
+
+char patientNames[MAX_PATIENTS][50];
+int patientAges[MAX_PATIENTS];
+int triageLevels[MAX_PATIENTS];
+int specialties[MAX_PATIENTS];
+int wards[MAX_PATIENTS];
+int admitted[MAX_PATIENTS];
+
+int patientCount = 0;
 void patientIntake();
 void viewBedOccupancy();
 void displayEmergency();
 void systemReport();
 void wardDetails();
 void registrationSummary();
-
-char patienDetails[100][2][50];
 
 int main()
 {
@@ -22,38 +30,43 @@ int main()
     printf("\n\n\t3.Display Triage Emergency Queue");
     printf("\n\n\t4.System Reports Analytics");
     printf("\n\n\t5.Save and Exit");
-    int option=1;
-    while(option)
+    int option = 0;
+
+    do
     {
-        printf("\n\nSelect an Option(1-5) : ");
-        scanf("%d",&option);
+        printf("\n\nSelect an Option (1-5): ");
+        scanf("%d", &option);
         getchar();
-        printf("\n");
+
         switch(option)
         {
         case 1:
             patientIntake();
-            option=0;
             break;
+
         case 2:
             viewBedOccupancy();
-            option=0;
             break;
+
         case 3:
             displayEmergency();
-            option=0;
             break;
+
         case 4:
             systemReport();
-            option=0;
             break;
-        default:
-            printf("\tInvalid Input");
-            option=1;
-            continue;
 
+        case 5:
+            printf("Saving data and exiting...\n");
+            break;
+
+        default:
+            printf("\n\tInvalid Input! Please enter 1-5.\n");
         }
+
     }
+    while(option != 5);
+
 
     printf("\n\n");
     return 0;
@@ -68,19 +81,21 @@ void patientIntake()
     printf("Patient Registration\n");
     printf("-------------------------------------------------\n\n\n");
 
-    char name[30];
-    int len=sizeof(patienDetails)/sizeof(patienDetails[0]);
-    int age,option;
+    int age;
     printf("Enter the patient name : ");
-    fgets(patienDetails[len][0],50,stdin);
+    fgets(patientNames[patientCount],50,stdin);
+
+    patientNames[patientCount][
+        strcspn(patientNames[patientCount], "\n")]='\0';
     printf("\nEnter the age(Year) : ");
-    scanf("%s",&patienDetails[len][1]);
+    scanf("%d", &patientAges[patientCount]);
+
     printf("\nEmergency / Triage Level: \n\n");
     printf("\t1.Normal\n");
     printf("\t2.Urgent\n");
     printf("\t3.Critical\n");
     printf("\n Enter the choice : ");
-    scanf("%d",&option);
+    scanf("%d",&triageLevels[patientCount]);
     printf("\n-----------------------------------------------\n");
     printf("             Select Specialty                    \n");
     printf("-------------------------------------------------\n\n\n");
@@ -89,9 +104,8 @@ void patientIntake()
     printf("2.Paediatrics\n");
     printf("3.Cardiology\n");
     printf("4.Neurology\n\n");
-    int option2,option3;
     printf("Select specialty ID:");
-    scanf("%d",&option2);
+    scanf("%d",&specialties[patientCount]);
 
     printf("\n-----------------------------------------------\n");
     printf("             Ward Addmission                     \n");
@@ -101,18 +115,24 @@ void patientIntake()
     printf("\t1.Yes\n");
     printf("\t2.No\n\n");
     printf("Enter the choice :");
-    scanf("%d",&option3);
-    switch(option3){
-        case 1:wardDetails();
-                break;
-        case 2:registrationSummary();
-                break;
-        default :printf("Invalid Input");
+    scanf("%d",&wards[patientCount]);
+    switch(wards[patientCount])
+    {
+    case 1:
+        wardDetails();
+
+        break;
+    case 2:
+        registrationSummary();
+
+        break;
+    default :
+        printf("Invalid Input");
+
     }
-
-
-
+    patientCount++;
 }
+
 
 void viewBedOccupancy()
 {
@@ -126,7 +146,8 @@ void systemReport()
 {
 }
 
-void wardDetails(){
+void wardDetails()
+{
     printf("\n--------------------------------------------------\n");
     printf("                 WARD DETAILS                     \n");
     printf("--------------------------------------------------\n\n\n");
@@ -135,14 +156,24 @@ void wardDetails(){
     printf("\t3.Surgical Ward\n");
     printf("\t4.ICU (Intensive Care Unit\n\n");
 
-    int option;
-    printf("Enter Ward ID : ");
-    scanf("%d",&option);
+    int option=0;
+
+    while (option<1 || option>4)
+    {
+        printf("Enter Ward ID (1-4): ");
+        scanf("%d",&option);
+
+        if (option<1 || option>4)
+        {
+            printf("Invalid Ward ID!\n");
+        }
+    }
     registrationSummary();
 
 }
 
-void registrationSummary(){
+void registrationSummary()
+{
     printf("\n--------------------------------------------------\n");
     printf("               REGISTRATION SUMMARY                 \n");
     printf("--------------------------------------------------\n\n\n");
