@@ -15,7 +15,7 @@ void patientIntake();
 void viewBedOccupancy();
 void displayEmergency();
 void systemReport();
-void wardDetails();
+void wardDetails(int option);
 void registrationSummary();
 
 int main()
@@ -94,8 +94,19 @@ void patientIntake()
     printf("\t1.Normal\n");
     printf("\t2.Urgent\n");
     printf("\t3.Critical\n");
-    printf("\n Enter the choice : ");
-    scanf("%d",&triageLevels[patientCount]);
+
+    do
+    {
+        printf("\n Enter the choice : ");
+        scanf("%d",&triageLevels[patientCount]);
+        if(triageLevels[patientCount]<1 || triageLevels[patientCount]>3)
+        {
+            printf("\n\tInvalid Input\n");
+            continue;
+        }
+    }
+    while(triageLevels[patientCount]<1 || triageLevels[patientCount]>3);
+
     printf("\n-----------------------------------------------\n");
     printf("             Select Specialty                    \n");
     printf("-------------------------------------------------\n\n\n");
@@ -104,8 +115,19 @@ void patientIntake()
     printf("2.Paediatrics\n");
     printf("3.Cardiology\n");
     printf("4.Neurology\n\n");
-    printf("Select specialty ID:");
-    scanf("%d",&specialties[patientCount]);
+    do
+    {
+        printf("Select specialty ID:");
+        scanf("%d",&specialties[patientCount]);
+        if(specialties[patientCount]<1 || specialties[patientCount]>4)
+        {
+            printf("\n\tInvalid Input\n\n");
+            continue;
+        }
+    }
+    while(specialties[patientCount]<1 || specialties[patientCount]>4);
+
+
 
     printf("\n-----------------------------------------------\n");
     printf("             Ward Addmission                     \n");
@@ -114,12 +136,24 @@ void patientIntake()
     printf("Is the patient admitted to a ward?\n");
     printf("\t1.Yes\n");
     printf("\t2.No\n\n");
-    printf("Enter the choice :");
-    scanf("%d",&wards[patientCount]);
-    switch(wards[patientCount])
+    int option;
+    do
+    {
+        printf("Enter the choice :");
+        scanf("%d",&option);
+
+        if(option<1 || option>2)
+        {
+            printf("\n\tInvalid Input\n\n");
+            continue;
+        }
+    }
+    while(option<1 || option>2);
+
+    switch(option)
     {
     case 1:
-        wardDetails();
+        wardDetails(option);
 
         break;
     case 2:
@@ -146,8 +180,12 @@ void systemReport()
 {
 }
 
-void wardDetails()
+void wardDetails(int option)
 {
+    if(option==2){
+        wards[patientCount]=0;
+        return;
+    }
     printf("\n--------------------------------------------------\n");
     printf("                 WARD DETAILS                     \n");
     printf("--------------------------------------------------\n\n\n");
@@ -156,18 +194,17 @@ void wardDetails()
     printf("\t3.Surgical Ward\n");
     printf("\t4.ICU (Intensive Care Unit\n\n");
 
-    int option=0;
-
-    while (option<1 || option>4)
+    do
     {
         printf("Enter Ward ID (1-4): ");
-        scanf("%d",&option);
-
-        if (option<1 || option>4)
+        scanf("%d",&wards[patientCount]);
+        if(wards[patientCount]<1 || wards[patientCount]>4)
         {
-            printf("Invalid Ward ID!\n");
+            printf("\n\tInvalid Input\n\n");
+            continue;
         }
     }
+    while(wards[patientCount]<1 || wards[patientCount]>4);
     registrationSummary();
 
 }
@@ -175,13 +212,39 @@ void wardDetails()
 void registrationSummary()
 {
     printf("\n--------------------------------------------------\n");
-    printf("               REGISTRATION SUMMARY                 \n");
-    printf("--------------------------------------------------\n\n\n");
+    printf("              REGISTRATION SUMMARY\n");
+    printf("--------------------------------------------------\n\n");
 
-    printf("Patient Name  : \n");
-    printf("Patient Age   : \n");
-    printf("Triage Level  : \n");
-    printf("Specialty     : \n");
-    printf("Ward          : \n");
+    printf("Patient Name  : %s\n",patientNames[patientCount]);
+    printf("Patient Age   : %d\n",patientAges[patientCount]);
 
+    printf("Triage Level  : ");
+    if(triageLevels[patientCount] == 1)
+        printf("Normal\n");
+    else if(triageLevels[patientCount] == 2)
+        printf("Urgent\n");
+    else if(triageLevels[patientCount] == 3)
+        printf("Critical\n");
+
+    printf("Specialty     : ");
+    if(specialties[patientCount] == 1)
+        printf("General Practice (OPD)\n");
+    else if(specialties[patientCount] == 2)
+        printf("Paediatrics\n");
+    else if(specialties[patientCount] == 3)
+        printf("Cardiology\n");
+    else if(specialties[patientCount] == 4)
+        printf("Neurology\n");
+
+    printf("Ward          : ");
+    if(wards[patientCount] == 0)
+        printf("Not Admitted\n");
+    else if(wards[patientCount] == 1)
+        printf("General Ward\n");
+    else if(wards[patientCount] == 2)
+        printf("Paediatric Ward\n");
+    else if(wards[patientCount] == 3)
+        printf("Surgical Ward\n");
+    else if(wards[patientCount] == 4)
+        printf("ICU\n");
 }
