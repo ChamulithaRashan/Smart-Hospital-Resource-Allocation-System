@@ -26,7 +26,7 @@ int dailyPatientCap[4] =
 };
 
 int patientCount = 0;
-int bedOccupancy[4][20];
+int bedOccupancy[4][20]= {0};
 
 void patientIntake();
 void viewBedOccupancy();
@@ -36,6 +36,7 @@ void wardDetails(int option);
 void registrationSummary();
 void calcDailyPatientCount(int specialty);
 int calcEstimatedWaitingTime(int count,int specialty);
+int setBed(int id);
 int main()
 {
     printf("\===================================================================\n");
@@ -137,19 +138,22 @@ void patientIntake()
     {
         printf("Select specialty ID : ");
         scanf("%d",&specialties[patientCount]);
+
         if(specialties[patientCount]<1 || specialties[patientCount]>4)
         {
             printf("\n\tInvalid Input\n\n");
-            continue;
         }
-        if(dailyPatientCount[specialties[patientCount] - 1] >=dailyPatientCap[specialties[patientCount]- 1])
-        {
-            printf("Daily patient capacity reached!\n");
-            continue;
-        }
-    }
+        else if(dailyPatientCount[specialties[patientCount]-1]>= dailyPatientCap[specialties[patientCount]-1])
 
-    while(specialties[patientCount]<1 || specialties[patientCount]>4);
+        {
+            printf("\nDaily patient capacity reached!\n");
+        }
+
+    }
+    while(specialties[patientCount]<1 ||
+            specialties[patientCount]>4 ||
+            dailyPatientCount[specialties[patientCount]-1] >=
+            dailyPatientCap[specialties[patientCount]-1]);
 
 
 
@@ -195,6 +199,15 @@ void patientIntake()
 void viewBedOccupancy()
 {
     system("cls");
+    int capacity[4] = {20, 10, 10, 5};
+
+    char *wardNames[4] =
+    {
+        "General Ward",
+        "Paediatric Ward",
+        "Surgical Ward",
+        "ICU"
+    };
     printf("=================================================\n");
     printf("           SMART HOSPITAL SYSTEM                 \n");
     printf("           BED OCCUPANCY MATRIX                  \n");
@@ -215,15 +228,34 @@ void viewBedOccupancy()
     printf("\n\nLegend : [0] = Available | [1] = Occupied | [--] = N/A (Exceeds Ward Capacity)");
     printf("\n---------------------------------------------------------------------------------\n\n");
 
-    printf("Ward Name / Bed \t| ");
+    printf("+------------------------+---------------------------------------------------------------------------------+\n");
+
+    printf("| %-22s | ","Ward Name / Bed ");
     for (int i = 1; i <= 20; i++)
     {
-        printf("%02d ",i);
+        printf("%03d ",i);
     }
-    printf("\n");
+    printf("|\n");
+    printf("+------------------------+---------------------------------------------------------------------------------+\n");
+    for(int ward=0; ward<4; ward++)
+    {
+        printf("| %-22s | ",wardNames[ward]);
 
+        for(int bed=0; bed<20; bed++)
+        {
+            if(bed<capacity[ward])
+            {
+                printf("[%d] ",bedOccupancy[ward][bed]);
+            }
+            else
+            {
+                printf("[-] ");
+            }
+        }
 
-
+        printf("|\n");
+    }
+    printf("+------------------------+---------------------------------------------------------------------------------+\n");
 }
 
 void displayEmergency()
@@ -248,7 +280,7 @@ void wardDetails(int option)
     printf("\t1.General Ward\n");
     printf("\t2.Paediatric Ward\n");
     printf("\t3.Surgical Ward\n");
-    printf("\t4.ICU (Intensive Care Unit\n\n");
+    printf("\t4.ICU (Intensive Care Unit)\n\n");
 
     do
     {
@@ -261,9 +293,21 @@ void wardDetails(int option)
         }
     }
     while(wards[patientCount]<1 || wards[patientCount]>4);
-    printf("\nEnter number of admitted days: ");
-    scanf("%d",&daysAdmitted[patientCount]);
-    registrationSummary();
+    if(setBed(wards[patientCount]))
+    {
+        printf("\nEnter number of admitted days: ");
+        scanf("%d", &daysAdmitted[patientCount]);
+
+        registrationSummary();
+    }
+    else
+    {
+        wards[patientCount]=0;
+        daysAdmitted[patientCount]=0;
+
+        printf("\nPatient cannot be admitted to this ward.\n");
+        registrationSummary();
+    }
 
 }
 
@@ -345,4 +389,37 @@ int calcEstimatedWaitingTime(int count,int specialty)
     else if(specialty==4)
         result=(count)*30;
     return result;
+}
+int setBed(int id)
+{
+    int capacity;
+
+    if(id ==1)
+        capacity=20;
+    else if(id==2)
+        capacity=10;
+    else if(id==3)
+        capacity=10;
+    else if(id==4)
+        capacity=5;
+    else
+        return 0;
+
+    int wardIndex =id-1;
+
+    for(int i=0; i < capacity; i++)
+    {
+        if(bedOccupancy[wardIndex][i] ==0)
+        {
+            bedOccupancy[wardIndex][i]=1;
+
+            printf("\nBed %02d assigned successfully.\n",i+1);
+
+            return 1;
+        }
+
+    }
+
+    printf("\nNo available beds in this ward!\n");
+    return 0;
 }
