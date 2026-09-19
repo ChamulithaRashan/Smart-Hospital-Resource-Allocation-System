@@ -17,7 +17,7 @@ int dailyPatientCount[SPECIALTIES] =
     0,
     0
 };
-int dailyPatientCap[4] =
+int dailyPatientCap[4]=
 {
     30,
     20,
@@ -25,8 +25,8 @@ int dailyPatientCap[4] =
     10
 };
 
-int patientCount = 0;
-int bedOccupancy[4][20]= {0};
+int patientCount=0;
+int bedOccupancy[4][20]={0};
 
 void patientIntake();
 void viewBedOccupancy();
@@ -264,7 +264,134 @@ void displayEmergency()
 
 void systemReport()
 {
+    system("cls");
+    int admittedPatients=0;
+    int normalPatients=0;
+    int urgentPatients=0;
+    int criticalPatients=0;
+
+    int generalOccupied=0;
+    int paediatricOccupied=0;
+    int surgicalOccupied=0;
+    int icuOccupied=0;
+
+    int totalBeds = 20+10+10+5;
+    int occupiedBeds =0;
+
+    for(int i=0;i < patientCount;i++)
+    {
+
+        if(wards[i] >0)
+        {
+            admittedPatients++;
+        }
+
+        if(triageLevels[i]==1)
+        {
+            normalPatients++;
+        }
+        else if(triageLevels[i]==2)
+        {
+            urgentPatients++;
+        }
+        else if(triageLevels[i]==3)
+        {
+            criticalPatients++;
+        }
+    }
+    for(int i=0;i<20;i++)
+    {
+        if(bedOccupancy[0][i]==1)
+        {
+            generalOccupied++;
+        }
+    }
+
+    for(int i=0;i<10;i++)
+    {
+        if(bedOccupancy[1][i]==1)
+        {
+            paediatricOccupied++;
+        }
+    }
+
+    for(int i=0;i<10;i++)
+    {
+        if(bedOccupancy[2][i]==1)
+        {
+            surgicalOccupied++;
+        }
+    }
+
+    for(int i=0;i < 5;i++)
+    {
+        if(bedOccupancy[3][i]==1)
+        {
+            icuOccupied++;
+        }
+    }
+
+    occupiedBeds = generalOccupied+paediatricOccupied+surgicalOccupied+icuOccupied;
+
+    printf("===============================================================\n");
+    printf("                  SMART HOSPITAL SYSTEM\n");
+    printf("                       SYSTEM REPORT\n");
+    printf("===============================================================\n\n");
+
+    printf("                    SYSTEM OVERVIEW\n");
+    printf("---------------------------------------------------------------\n");
+
+    printf("Total Registered Patients : %d\n",patientCount);
+    printf("Total Admitted Patients   : %d\n",admittedPatients);
+    printf("Total Outpatients         : %d\n",
+           patientCount-admittedPatients);
+
+    printf("\n---------------------------------------------------------------\n");
+    printf("                     TRIAGE SUMMARY\n");
+    printf("---------------------------------------------------------------\n");
+
+    printf("Triage Level                 Patients\n");
+    printf("--------------------------------------\n");
+    printf("1. Normal                       %d\n",normalPatients);
+    printf("2. Urgent                       %d\n",urgentPatients);
+    printf("3. Critical                     %d\n",criticalPatients);
+
+    printf("\n---------------------------------------------------------------\n");
+    printf("                   SPECIALTY SUMMARY\n");
+    printf("---------------------------------------------------------------\n");
+
+    printf("Specialty                     Patients\n");
+    printf("--------------------------------------\n");
+    printf("1. General Practice (OPD)        %d\n",dailyPatientCount[0]);
+    printf("2. Paediatrics                   %d\n",dailyPatientCount[1]);
+    printf("3. Cardiology                    %d\n",dailyPatientCount[2]);
+    printf("4. Neurology                     %d\n",dailyPatientCount[3]);
+    printf("\n---------------------------------------------------------------\n");
+    printf("                    WARD OCCUPANCY\n");
+    printf("---------------------------------------------------------------\n");
+
+    printf("Ward                  Occupied    Capacity\n");
+    printf("--------------------------------------------\n");
+
+    printf("General Ward             %2d          20\n",generalOccupied);
+    printf("Paediatric Ward          %2d          10\n",paediatricOccupied);
+    printf("Surgical Ward            %2d          10\n",surgicalOccupied);
+    printf("ICU                      %2d           5\n",icuOccupied);
+
+    printf("--------------------------------------------\n");
+
+    printf("Total Beds Occupied      : %d\n",occupiedBeds);
+    printf("Total Bed Capacity       : %d\n",totalBeds);
+    printf("Available Beds           : %d\n",totalBeds-occupiedBeds);
+
+    printf("\n===============================================================\n");
+    printf("                  END OF SYSTEM REPORT\n");
+    printf("===============================================================\n");
+
+    printf("\nPress Enter to return to Main Menu...");
+    getchar();
 }
+
 
 void wardDetails(int option)
 {
