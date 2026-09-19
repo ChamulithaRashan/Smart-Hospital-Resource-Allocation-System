@@ -26,7 +26,8 @@ int dailyPatientCap[4]=
 };
 
 int patientCount=0;
-int bedOccupancy[4][20]={0};
+float billAmount[MAX_PATIENTS];
+int bedOccupancy[4][20]= {0};
 
 void patientIntake();
 void viewBedOccupancy();
@@ -37,6 +38,10 @@ void registrationSummary();
 void calcDailyPatientCount(int specialty);
 int calcEstimatedWaitingTime(int count,int specialty);
 int setBed(int id);
+float calcSurcharge(int urgencyLevel,float fee);
+float calcBaseFee(int doctoraId);
+float calcWardStayCost(int days,int fee);
+float calcAgeDiscount(int age,float total);
 int main()
 {
     printf("\===================================================================\n");
@@ -278,7 +283,7 @@ void systemReport()
     int totalBeds = 20+10+10+5;
     int occupiedBeds =0;
 
-    for(int i=0;i < patientCount;i++)
+    for(int i=0; i < patientCount; i++)
     {
 
         if(wards[i] >0)
@@ -299,7 +304,7 @@ void systemReport()
             criticalPatients++;
         }
     }
-    for(int i=0;i<20;i++)
+    for(int i=0; i<20; i++)
     {
         if(bedOccupancy[0][i]==1)
         {
@@ -307,7 +312,7 @@ void systemReport()
         }
     }
 
-    for(int i=0;i<10;i++)
+    for(int i=0; i<10; i++)
     {
         if(bedOccupancy[1][i]==1)
         {
@@ -315,7 +320,7 @@ void systemReport()
         }
     }
 
-    for(int i=0;i<10;i++)
+    for(int i=0; i<10; i++)
     {
         if(bedOccupancy[2][i]==1)
         {
@@ -323,7 +328,7 @@ void systemReport()
         }
     }
 
-    for(int i=0;i < 5;i++)
+    for(int i=0; i < 5; i++)
     {
         if(bedOccupancy[3][i]==1)
         {
@@ -484,7 +489,23 @@ void registrationSummary()
     {
         printf("Admitted Days : 0\n");
     }
+    printf("\n-----------------------------------------------------\n");
+    printf("Base Consulation Fee  : LKR %.2f",calcBaseFee(specialties[patientCount]));
+    printf("\nEmergency Surcharge   : LKR %.2f",calcSurcharge(triageLevels[patientCount],calcBaseFee(specialties[patientCount])));
+    printf("\nWard Stay Cost(%d Days): LKR %.2f",daysAdmitted[patientCount],calcWardStayCost(daysAdmitted[patientCount],wards[patientCount]));
 
+    printf("\n-----------------------------------------------------\n\n");
+
+    float bill = calcBaseFee(specialties[patientCount])
+           + calcSurcharge(triageLevels[patientCount],
+                           calcBaseFee(specialties[patientCount]))
+           + calcWardStayCost(daysAdmitted[patientCount],
+                              wards[patientCount]);
+    printf("\nGross Total Bill        : LKR %.2f",bill);
+    printf("\nAge Subsidy Discount    : LKR %.2f",calcAgeDiscount(patientAges[patientCount],bill));
+    float finalBill=bill-calcAgeDiscount(patientAges[patientCount],bill);
+    billAmount[patientCount]=finalBill;
+    printf("\nFinal Payable Amount    : LKR %.2f",finalBill);
     printf("\n\n-------------------------------------------------");
     printf("\n         Patient Registered Successfully           ");
     printf("\n---------------------------------------------------");
@@ -549,4 +570,51 @@ int setBed(int id)
 
     printf("\nNo available beds in this ward!\n");
     return 0;
+}
+float calcSurcharge(int urgencyLevel,float fee)
+{
+    float charge;
+    if(urgencyLevel==1)
+        charge=0;
+    else if (urgencyLevel==2)
+        charge=(fee*20)/100;
+    else if (urgencyLevel==3)
+        charge=(fee*50)/100;
+    return charge;
+}
+float calcBaseFee(int doctorId)
+{
+    float fee;
+    if(doctorId==1)
+        fee=1500.0;
+    else if(doctorId==2)
+        fee=2500.0;
+    else if(doctorId==3)
+        fee=4500.0;
+    else if(doctorId==4)
+        fee=5000.0;
+            return fee;
+
+}
+float calcWardStayCost(int days,int wardId)
+{
+    float result;
+    if(wardId==1)
+        result=days*3000.0;
+    else if(wardId==2)
+        result=days*6000.0;
+    else if(wardId==3)
+        result=days*12000.0;
+    else if(wardId==4)
+        result=days*25000.0;
+    else
+        result=0.0;
+    return result;
+
+}
+float calcAgeDiscount(int age,float total){
+    float result=0;
+    if(age<5 || age>65)
+        result=total*15/100;
+    return result;
 }
