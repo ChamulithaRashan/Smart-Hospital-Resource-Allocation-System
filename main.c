@@ -26,6 +26,8 @@ int dailyPatientCap[4] =
 };
 
 int patientCount = 0;
+int bedOccupancy[4][20];
+
 void patientIntake();
 void viewBedOccupancy();
 void displayEmergency();
@@ -192,6 +194,36 @@ void patientIntake()
 
 void viewBedOccupancy()
 {
+    system("cls");
+    printf("=================================================\n");
+    printf("           SMART HOSPITAL SYSTEM                 \n");
+    printf("           BED OCCUPANCY MATRIX                  \n");
+    printf("=================================================\n\n\n");
+    printf("Bed Occupancy Matrix\n");
+    printf("-------------------------------------------------\n\n\n");
+
+    printf("Hospital Ward Data\n");
+    printf("+---------+---------------------------+---------------------------+--------------------+\n");
+    printf("| Ward ID | Ward Name                 | Daily Bed Rate (LKR/Day)  | Total Bed Capacity |\n");
+    printf("+---------+---------------------------+---------------------------+--------------------+\n");
+    printf("|    1    | General Ward              |                   3000.00 |         20         |\n");
+    printf("|    2    | Paediatric Ward           |                   6000.00 |         10         |\n");
+    printf("|    3    | Surgical Ward             |                  12000.00 |         10         |\n");
+    printf("|    4    | ICU (Intensive Care Unit) |                  25000.00 |         05         |\n");
+    printf("+---------+---------------------------+---------------------------+--------------------+\n");
+
+    printf("\n\nLegend : [0] = Available | [1] = Occupied | [--] = N/A (Exceeds Ward Capacity)");
+    printf("\n---------------------------------------------------------------------------------\n\n");
+
+    printf("Ward Name / Bed \t| ");
+    for (int i = 1; i <= 20; i++)
+    {
+        printf("%02d ",i);
+    }
+    printf("\n");
+
+
+
 }
 
 void displayEmergency()
