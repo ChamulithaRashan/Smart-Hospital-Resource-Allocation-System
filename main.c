@@ -2,13 +2,28 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_PATIENTS 100
+#define SPECIALTIES 4
 
 char patientNames[MAX_PATIENTS][50];
 int patientAges[MAX_PATIENTS];
 int triageLevels[MAX_PATIENTS];
 int specialties[MAX_PATIENTS];
 int wards[MAX_PATIENTS];
-int admitted[MAX_PATIENTS];
+int daysAdmitted[MAX_PATIENTS];
+int dailyPatientCount[SPECIALTIES] =
+{
+    0,
+    0,
+    0,
+    0
+};
+int dailyPatientCap[4] =
+{
+    30,
+    20,
+    12,
+    10
+};
 
 int patientCount = 0;
 void patientIntake();
@@ -17,7 +32,8 @@ void displayEmergency();
 void systemReport();
 void wardDetails(int option);
 void registrationSummary();
-
+void calcDailyPatientCount(int specialty);
+int calcEstimatedWaitingTime(int count,int specialty);
 int main()
 {
     printf("\===================================================================\n");
@@ -117,14 +133,20 @@ void patientIntake()
     printf("4.Neurology\n\n");
     do
     {
-        printf("Select specialty ID:");
+        printf("Select specialty ID : ");
         scanf("%d",&specialties[patientCount]);
         if(specialties[patientCount]<1 || specialties[patientCount]>4)
         {
             printf("\n\tInvalid Input\n\n");
             continue;
         }
+        if(dailyPatientCount[specialties[patientCount] - 1] >=dailyPatientCap[specialties[patientCount]- 1])
+        {
+            printf("Daily patient capacity reached!\n");
+            continue;
+        }
     }
+
     while(specialties[patientCount]<1 || specialties[patientCount]>4);
 
 
@@ -133,13 +155,13 @@ void patientIntake()
     printf("             Ward Addmission                     \n");
     printf("-------------------------------------------------\n\n\n");
 
-    printf("Is the patient admitted to a ward?\n");
+    printf("Is the patient admitted to a ward? \n");
     printf("\t1.Yes\n");
     printf("\t2.No\n\n");
     int option;
     do
     {
-        printf("Enter the choice :");
+        printf("Enter the choice : ");
         scanf("%d",&option);
 
         if(option<1 || option>2)
@@ -182,8 +204,10 @@ void systemReport()
 
 void wardDetails(int option)
 {
-    if(option==2){
+    if(option==2)
+    {
         wards[patientCount]=0;
+
         return;
     }
     printf("\n--------------------------------------------------\n");
@@ -205,6 +229,8 @@ void wardDetails(int option)
         }
     }
     while(wards[patientCount]<1 || wards[patientCount]>4);
+    printf("\nEnter number of admitted days: ");
+    scanf("%d",&daysAdmitted[patientCount]);
     registrationSummary();
 
 }
@@ -227,24 +253,64 @@ void registrationSummary()
         printf("Critical\n");
 
     printf("Specialty     : ");
-    if(specialties[patientCount] == 1)
+    if(specialties[patientCount] ==1)
         printf("General Practice (OPD)\n");
-    else if(specialties[patientCount] == 2)
+    else if(specialties[patientCount] ==2)
         printf("Paediatrics\n");
-    else if(specialties[patientCount] == 3)
+    else if(specialties[patientCount] ==3)
         printf("Cardiology\n");
-    else if(specialties[patientCount] == 4)
+    else if(specialties[patientCount] ==4)
         printf("Neurology\n");
 
     printf("Ward          : ");
-    if(wards[patientCount] == 0)
+    if(wards[patientCount] ==0)
         printf("Not Admitted\n");
-    else if(wards[patientCount] == 1)
+    else if(wards[patientCount] ==1)
         printf("General Ward\n");
-    else if(wards[patientCount] == 2)
+    else if(wards[patientCount] ==2)
         printf("Paediatric Ward\n");
-    else if(wards[patientCount] == 3)
+    else if(wards[patientCount] ==3)
         printf("Surgical Ward\n");
-    else if(wards[patientCount] == 4)
+    else if(wards[patientCount] ==4)
         printf("ICU\n");
+    if (wards[patientCount] >0)
+    {
+        printf("Admitted Days : %d\n",daysAdmitted[patientCount]);
+    }
+    else
+    {
+        printf("Admitted Days : 0\n");
+    }
+
+    printf("\n\n-------------------------------------------------");
+    printf("\n         Patient Registered Successfully           ");
+    printf("\n---------------------------------------------------");
+    printf("\n\nPatient ID              : PAT-%d",1000+patientCount);
+    printf("\nEstiimated Waiting time : %d mins",calcEstimatedWaitingTime(dailyPatientCount[specialties[patientCount]-1],specialties[patientCount]));
+    calcDailyPatientCount(specialties[patientCount]);
+
+}
+void calcDailyPatientCount(int specialty)
+{
+    if(specialty==1)
+        dailyPatientCount[0]++;
+    else if(specialty==2)
+        dailyPatientCount[1]++;
+    else if(specialty==3)
+        dailyPatientCount[2]++;
+    else if(specialty==4)
+        dailyPatientCount[3]++;
+}
+int calcEstimatedWaitingTime(int count,int specialty)
+{
+    int result;
+    if(specialty==1)
+        result=(count)*15;
+    else if(specialty==2)
+        result=(count)*20;
+    else if(specialty==3)
+        result=(count)*30;
+    else if(specialty==4)
+        result=(count)*30;
+    return result;
 }
