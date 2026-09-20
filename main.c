@@ -266,6 +266,9 @@ void viewBedOccupancy()
 void displayEmergency()
 {
     system("cls");
+    int critical=0;
+    int urgent=0;
+    int normal=0;
     printf("===================================================\n");
     printf("           SMART HOSPITAL SYSTEM                 \n");
     printf("           TRIAGE EMERGENCY QUEUE                  \n");
@@ -274,27 +277,57 @@ void displayEmergency()
     printf("Total Patients Registerd : %d",patientCount);
     printf("\n\n Urgency Level Summary \n");
     printf("---------------------------------------------------\n");
-    printf(" Level 3 - Critical        : %d",1);
-    printf("\n Level 2 - Urgent         : %d",1);
-    printf("\n\n Level 1 - Normal         : %d",1);
+    for(int i=0 ; i < patientCount ; i++)
+    {
+        if(triageLevels[patientCount]==1)
+            normal++;
+        else if(triageLevels[patientCount]==2)
+            urgent++;
+        else if(triageLevels[patientCount]==3)
+            critical++;
+    }
+    printf(" Level 3 - Critical       : %d",critical);
+    printf("\n Level 2 - Urgent         : %d",urgent);
+    printf("\n\n Level 1 - Normal         : %d",normal);
     printf("\n---------------------------------------------------\n\n");
 
     printf("                  EMERGENCY QUEUE                   \n");
     printf("---------------------------------------------------\n");
     printf(" Priority         Patient Name      Urgency  Level");
     printf("\n---------------------------------------------------\n");
-
+    int count=0;
+    for(int i=0 ; i < patientCount ; i++)
+    {
+        if(triageLevels[i]==3)
+        {
+            printf("  %d        %s           Level 3-Critical",count+1,patientNames[i]);
+            count++;s
+        }
+    }
+    printf("\n");
+    for(int i=0 ; i < patientCount ; i++)
+    {
+        if(triageLevels[i]==2)
+        {
+            printf("  %d        %s           Level 2-Urgent",count+1,patientNames[i]);
+            count++;
+        }
+    }
+    printf("\n");
+    for(int i=0 ; i < patientCount ; i++)
+    {
+        if(triageLevels[i]==1)
+        {
+            printf("  %d        %s           Level 1-Normal",count+1,patientNames[i]);
+            count++;
+        }
+    }
     printf("\n---------------------------------------------------\n");
 
-    printf("\n Critical Patient : ");
-    printf("\n Urgent Patient   : ");
-    printf("\n Normal Patient   : ");
+    printf("\n Critical Patient : %d",critical);
+    printf("\n Urgent Patient   : %d",urgent);
+    printf("\n Normal Patient   : %d",normal);
     printf("\n\n===================================================");
-
-
-
-
-
 
 }
 
@@ -528,10 +561,10 @@ void registrationSummary()
     printf("\n-----------------------------------------------------\n\n");
 
     float bill = calcBaseFee(specialties[patientCount])
-           + calcSurcharge(triageLevels[patientCount],
-                           calcBaseFee(specialties[patientCount]))
-           + calcWardStayCost(daysAdmitted[patientCount],
-                              wards[patientCount]);
+                 + calcSurcharge(triageLevels[patientCount],
+                                 calcBaseFee(specialties[patientCount]))
+                 + calcWardStayCost(daysAdmitted[patientCount],
+                                    wards[patientCount]);
     printf("\nGross Total Bill        : LKR %.2f",bill);
     printf("\nAge Subsidy Discount    : LKR %.2f",calcAgeDiscount(patientAges[patientCount],bill));
     float finalBill=bill-calcAgeDiscount(patientAges[patientCount],bill);
@@ -624,7 +657,7 @@ float calcBaseFee(int doctorId)
         fee=4500.0;
     else if(doctorId==4)
         fee=5000.0;
-            return fee;
+    return fee;
 
 }
 float calcWardStayCost(int days,int wardId)
@@ -643,7 +676,8 @@ float calcWardStayCost(int days,int wardId)
     return result;
 
 }
-float calcAgeDiscount(int age,float total){
+float calcAgeDiscount(int age,float total)
+{
     float result=0;
     if(age<5 || age>65)
         result=total*15/100;
