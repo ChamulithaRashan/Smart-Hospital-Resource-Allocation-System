@@ -315,41 +315,42 @@ void displayEmergency()
     }
     printf(" Level 3 - Critical       : %d",critical);
     printf("\n Level 2 - Urgent         : %d",urgent);
-    printf("\n\n Level 1 - Normal         : %d",normal);
+    printf("\n Level 1 - Normal         : %d",normal);
     printf("\n---------------------------------------------------\n\n");
 
     printf("                  EMERGENCY QUEUE                   \n");
-    printf("---------------------------------------------------\n");
-    printf(" Priority         Patient Name      Urgency  Level");
-    printf("\n---------------------------------------------------\n");
+    printf("-----------------------------------------------------------\n");
+    printf("%-10s %-30s %-20s\n", "Priority", "Patient Name", "Urgency Level");
+    printf("\n-----------------------------------------------------------\n");
     int count=0;
     for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==3)
         {
-            printf("  %d        %s           Level 3-Critical",count+1,patientNames[i]);
+            printf("%-10d %-30s %-20s\n",count+1,patientNames[i],"Level 3 - Critical");
             count++;
         }
     }
-    printf("\n");
+    //printf("\n");
     for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==2)
         {
-            printf("  %d        %s           Level 2-Urgent",count+1,patientNames[i]);
+           printf("%-10d %-30s %-20s\n",count+1,patientNames[i],"Level 2 - Urgent");
             count++;
         }
     }
-    printf("\n");
+   // printf("\n");
     for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==1)
         {
-            printf("  %d        %s           Level 1-Normal",count+1,patientNames[i]);
+            printf("%-10d %-30s %-20s\n",count+1,patientNames[i],"Level 1 - Normal");
             count++;
         }
     }
-    printf("\n---------------------------------------------------\n");
+    //printf("\n");
+    printf("\n-----------------------------------------------------------\n");
 
     printf("\n Critical Patient : %d",critical);
     printf("\n Urgent Patient   : %d",urgent);
