@@ -1,0 +1,2 @@
+Patient ID: PAT-1000 | Name: SASA | Age: 2 | Specialty: 1 | Triage: 1 | Ward: 1 | Days: 2 | Final Bill: LKR 6375.00
+Patient ID: PAT-1000 | Name: SAAS | Age: 22 | Specialty: 2 | Triage: 2 | Ward: 4 | Days: 1 | Final Bill: LKR 28000.00

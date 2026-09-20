@@ -42,8 +42,12 @@ float calcSurcharge(int urgencyLevel,float fee);
 float calcBaseFee(int doctoraId);
 float calcWardStayCost(int days,int fee);
 float calcAgeDiscount(int age,float total);
+void saveBedStatus();
+void loadBedStatus();
+void savePatientRecord();
 int main()
 {
+    loadBedStatus();
     printf("\===================================================================\n");
     printf("\t\tHospital Resource Allocating System");
     printf("\n===================================================================\n");
@@ -81,23 +85,26 @@ int main()
             break;
 
         case 5:
+            saveBedStatus();
             printf("Saving data and exiting...\n");
             break;
 
         default:
             printf("\n\tInvalid Input! Please enter 1-5.\n");
         }
-
     }
     while(option != 5);
-
-
     printf("\n\n");
     return 0;
 }
 void patientIntake()
 {
     system("cls");
+    if(patientCount >= MAX_PATIENTS)
+    {
+        printf("Patient registration limit reached!\n");
+        return;
+    }
     printf("=================================================\n");
     printf("           SMART HOSPITAL SYSTEM                 \n");
     printf("              PATIENT INTAKE                     \n");
@@ -279,11 +286,11 @@ void displayEmergency()
     printf("---------------------------------------------------\n");
     for(int i=0 ; i < patientCount ; i++)
     {
-        if(triageLevels[patientCount]==1)
+        if(triageLevels[i]==1)
             normal++;
-        else if(triageLevels[patientCount]==2)
+        else if(triageLevels[i]==2)
             urgent++;
-        else if(triageLevels[patientCount]==3)
+        else if(triageLevels[i]==3)
             critical++;
     }
     printf(" Level 3 - Critical       : %d",critical);
@@ -296,16 +303,16 @@ void displayEmergency()
     printf(" Priority         Patient Name      Urgency  Level");
     printf("\n---------------------------------------------------\n");
     int count=0;
-    for(int i=0 ; i < patientCount ; i++)
+    for(int i=0 ;i < patientCount;i++)
     {
         if(triageLevels[i]==3)
         {
             printf("  %d        %s           Level 3-Critical",count+1,patientNames[i]);
-            count++;s
+            count++;
         }
     }
     printf("\n");
-    for(int i=0 ; i < patientCount ; i++)
+    for(int i=0 ; i < patientCount;i++)
     {
         if(triageLevels[i]==2)
         {
@@ -314,7 +321,7 @@ void displayEmergency()
         }
     }
     printf("\n");
-    for(int i=0 ; i < patientCount ; i++)
+    for(int i=0 ;i < patientCount;i++)
     {
         if(triageLevels[i]==1)
         {
@@ -347,7 +354,7 @@ void systemReport()
     int totalBeds = 20+10+10+5;
     int occupiedBeds =0;
 
-    for(int i=0; i < patientCount; i++)
+    for(int i=0;i < patientCount;i++)
     {
 
         if(wards[i] >0)
@@ -569,6 +576,7 @@ void registrationSummary()
     printf("\nAge Subsidy Discount    : LKR %.2f",calcAgeDiscount(patientAges[patientCount],bill));
     float finalBill=bill-calcAgeDiscount(patientAges[patientCount],bill);
     billAmount[patientCount]=finalBill;
+    savePatientRecord();
     printf("\nFinal Payable Amount    : LKR %.2f",finalBill);
     printf("\n\n-------------------------------------------------");
     printf("\n         Patient Registered Successfully           ");
@@ -624,7 +632,7 @@ int setBed(int id)
         if(bedOccupancy[wardIndex][i] ==0)
         {
             bedOccupancy[wardIndex][i]=1;
-
+            saveBedStatus();
             printf("\nBed %02d assigned successfully.\n",i+1);
 
             return 1;
@@ -682,4 +690,74 @@ float calcAgeDiscount(int age,float total)
     if(age<5 || age>65)
         result=total*15/100;
     return result;
+}
+void saveBedStatus()
+{
+    FILE *file=fopen("beds_status.txt", "w");
+
+    if(file==NULL)
+    {
+        printf("Error opening beds_status.txt\n");
+        return;
+    }
+
+    for(int ward=0;ward<4;ward++)
+    {
+        for(int bed=0;bed < 20;bed++)
+        {
+            fprintf(file, "%d ",bedOccupancy[ward][bed]);
+        }
+
+        fprintf(file,"\n");
+    }
+
+    fclose(file);
+}
+void loadBedStatus()
+{
+    FILE *file=fopen("beds_status.txt","r");
+
+    if(file==NULL)
+    {
+        return;
+    }
+
+    for(int ward = 0; ward < 4;ward++)
+    {
+        for(int bed=0;bed < 20;bed++)
+        {
+            fscanf(file, "%d",&bedOccupancy[ward][bed]);
+        }
+    }
+
+    fclose(file);
+}
+void savePatientRecord()
+{
+    FILE *file=fopen("patient_records.txt","a");
+
+    if(file == NULL)
+    {
+        printf("Error opening patient_records.txt\n");
+        return;
+    }
+
+    fprintf(file,
+            "Patient ID: PAT-%d | "
+            "Name: %s | "
+            "Age: %d | "
+            "Specialty: %d | "
+            "Triage: %d | "
+            "Ward: %d | "
+            "Days: %d | "
+            "Final Bill: LKR %.2f\n",
+            1000+patientCount,
+            patientNames[patientCount],
+            patientAges[patientCount],
+            specialties[patientCount],
+            triageLevels[patientCount],
+            wards[patientCount],
+            daysAdmitted[patientCount],
+            billAmount[patientCount]);
+    fclose(file);
 }
