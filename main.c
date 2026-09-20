@@ -265,6 +265,37 @@ void viewBedOccupancy()
 
 void displayEmergency()
 {
+    system("cls");
+    printf("===================================================\n");
+    printf("           SMART HOSPITAL SYSTEM                 \n");
+    printf("           TRIAGE EMERGENCY QUEUE                  \n");
+    printf("===================================================\n\n\n");
+
+    printf("Total Patients Registerd : %d",patientCount);
+    printf("\n\n Urgency Level Summary \n");
+    printf("---------------------------------------------------\n");
+    printf(" Level 3 - Critical        : %d",1);
+    printf("\n Level 2 - Urgent         : %d",1);
+    printf("\n\n Level 1 - Normal         : %d",1);
+    printf("\n---------------------------------------------------\n\n");
+
+    printf("                  EMERGENCY QUEUE                   \n");
+    printf("---------------------------------------------------\n");
+    printf(" Priority         Patient Name      Urgency  Level");
+    printf("\n---------------------------------------------------\n");
+
+    printf("\n---------------------------------------------------\n");
+
+    printf("\n Critical Patient : ");
+    printf("\n Urgent Patient   : ");
+    printf("\n Normal Patient   : ");
+    printf("\n\n===================================================");
+
+
+
+
+
+
 }
 
 void systemReport()
