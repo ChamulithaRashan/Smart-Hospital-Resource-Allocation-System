@@ -48,57 +48,12 @@ void saveBedStatus();
 void loadBedStatus();
 void savePatientRecord();
 void loadNextPatientID();
+void mainMenu();
 int main()
 {
     loadBedStatus();
     loadNextPatientID();
-    printf("\===================================================================\n");
-    printf("\t\tHospital Resource Allocating System");
-    printf("\n===================================================================\n");
-    printf("\n\n\t\t\tMain Menu\n");
-    printf("---------------------------------------------------------------------\n\n");
-    printf("\t1.Patient Intake & Registration ");
-    printf("\n\n\t2.View Bed Occupancy Matrix");
-    printf("\n\n\t3.Display Triage Emergency Queue");
-    printf("\n\n\t4.System Reports Analytics");
-    printf("\n\n\t5.Save and Exit");
-    int option = 0;
-
-    do
-    {
-        printf("\n\nSelect an Option (1-5): ");
-        scanf("%d", &option);
-        getchar();
-
-        switch(option)
-        {
-        case 1:
-            patientIntake();
-            break;
-
-        case 2:
-            viewBedOccupancy();
-            break;
-
-        case 3:
-            displayEmergency();
-            break;
-
-        case 4:
-            systemReport();
-            break;
-
-        case 5:
-            saveBedStatus();
-            printf("Saving data and exiting...\n");
-            break;
-
-        default:
-            printf("\n\tInvalid Input! Please enter 1-5.\n");
-        }
-    }
-    while(option != 5);
-    printf("\n\n");
+    mainMenu();
     return 0;
 }
 void patientIntake()
@@ -209,6 +164,30 @@ void patientIntake()
 
     }
     patientCount++;
+    char choice;
+    while(1)
+    {
+        printf("\nBack to main menu (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice=='Y' || choice=='y')
+        {
+            system("cls");
+            mainMenu();
+        }
+        else if (choice=='N' ||choice== 'n')
+        {
+            system("cls");
+            printf("=========================================\n");
+            printf("         GOOD BYE! HAVE A NICE DAY       \n");
+            printf("=========================================\n");
+            exit(0);
+        }
+        else
+        {
+            printf("\n\tInvalid choice! Please enter Y or N.\n\n");
+        }
+    }
 }
 
 
@@ -272,6 +251,30 @@ void viewBedOccupancy()
         printf("|\n");
     }
     printf("+------------------------+---------------------------------------------------------------------------------+\n");
+    char choice;
+    while(1)
+    {
+        printf("\nBack to main menu (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice=='Y' || choice=='y')
+        {
+            system("cls");
+            mainMenu();
+        }
+        else if (choice=='N' ||choice== 'n')
+        {
+            system("cls");
+            printf("=========================================\n");
+            printf("         GOOD BYE! HAVE A NICE DAY       \n");
+            printf("=========================================\n");
+            exit(0);
+        }
+        else
+        {
+            printf("\n\tInvalid choice! Please enter Y or N.\n\n");
+        }
+    }
 }
 
 void displayEmergency()
@@ -339,7 +342,30 @@ void displayEmergency()
     printf("\n Urgent Patient   : %d",urgent);
     printf("\n Normal Patient   : %d",normal);
     printf("\n\n===================================================");
+    char choice;
+    while(1)
+    {
+        printf("\nBack to main menu (Y/N): ");
+        scanf(" %c", &choice);
 
+        if (choice=='Y' || choice=='y')
+        {
+            system("cls");
+            mainMenu();
+        }
+        else if (choice=='N' ||choice== 'n')
+        {
+            system("cls");
+            printf("=========================================\n");
+            printf("         GOOD BYE! HAVE A NICE DAY       \n");
+            printf("=========================================\n");
+            exit(0);
+        }
+        else
+        {
+            printf("\n\tInvalid choice! Please enter Y or N.\n\n");
+        }
+    }
 }
 
 void systemReport()
@@ -470,6 +496,30 @@ void systemReport()
 
     printf("\nPress Enter to return to Main Menu...");
     getchar();
+    char choice;
+    while(1)
+    {
+        printf("Back to main menu (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice=='Y' || choice=='y')
+        {
+            system("cls");
+            mainMenu();
+        }
+        else if (choice=='N' ||choice== 'n')
+        {
+            system("cls");
+            printf("=========================================\n");
+            printf("         GOOD BYE! HAVE A NICE DAY       \n");
+            printf("=========================================\n");
+            exit(0);
+        }
+        else
+        {
+            printf("\n\tInvalid choice! Please enter Y or N.\n\n");
+        }
+    }
 }
 
 
@@ -794,4 +844,53 @@ void loadNextPatientID()
     nextPatientID=lastID+1;
 
     fclose(file);
+}
+void mainMenu(){
+printf("\===================================================================\n");
+    printf("\t\tHospital Resource Allocating System");
+    printf("\n===================================================================\n");
+    printf("\n\n\t\t\tMain Menu\n");
+    printf("---------------------------------------------------------------------\n\n");
+    printf("\t1.Patient Intake & Registration ");
+    printf("\n\n\t2.View Bed Occupancy Matrix");
+    printf("\n\n\t3.Display Triage Emergency Queue");
+    printf("\n\n\t4.System Reports Analytics");
+    printf("\n\n\t5.Save and Exit");
+    int option = 0;
+
+    do
+    {
+        printf("\n\nSelect an Option (1-5): ");
+        scanf("%d", &option);
+        getchar();
+
+        switch(option)
+        {
+        case 1:
+            patientIntake();
+            break;
+
+        case 2:
+            viewBedOccupancy();
+            break;
+
+        case 3:
+            displayEmergency();
+            break;
+
+        case 4:
+            systemReport();
+            break;
+
+        case 5:
+            saveBedStatus();
+            printf("Saving data and exiting...\n");
+            break;
+
+        default:
+            printf("\n\tInvalid Input! Please enter 1-5.\n");
+        }
+    }
+    while(option != 5);
+    printf("\n\n");
 }

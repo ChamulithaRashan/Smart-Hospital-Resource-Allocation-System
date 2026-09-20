@@ -1,3 +1,6 @@
 Patient ID: PAT-1000 | Name: SASA | Age: 2 | Specialty: 1 | Triage: 1 | Ward: 1 | Days: 2 | Final Bill: LKR 6375.00
 Patient ID: PAT-1000 | Name: SAAS | Age: 22 | Specialty: 2 | Triage: 2 | Ward: 4 | Days: 1 | Final Bill: LKR 28000.00
 Patient ID: PAT-1001 | Name: sasa | Age: 22 | Specialty: 2 | Triage: 1 | Ward: 3 | Days: 2 | Final Bill: LKR 26500.00
+Patient ID: PAT-1002 | Name: sasa | Age: 22 | Specialty: 1 | Triage: 1 | Ward: 0 | Days: 0 | Final Bill: LKR 1500.00
+Patient ID: PAT-1003 | Name: asa s | Age: 22 | Specialty: 2 | Triage: 1 | Ward: 2 | Days: 1 | Final Bill: LKR 8500.00
+Patient ID: PAT-1004 | Name: sasa | Age: 22 | Specialty: 2 | Triage: 2 | Ward: 4 | Days: 2 | Final Bill: LKR 53000.00
