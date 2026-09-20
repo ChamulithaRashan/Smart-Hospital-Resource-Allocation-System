@@ -51,7 +51,6 @@ void loadNextPatientID();
 void mainMenu();
 int main()
 {
-    loadBedStatus();
     loadNextPatientID();
     mainMenu();
     return 0;
@@ -76,9 +75,23 @@ void patientIntake()
     fgets(patientNames[patientCount],50,stdin);
 
     patientNames[patientCount][
-        strcspn(patientNames[patientCount], "\n")]='\0';
-    printf("\nEnter the age(Year) : ");
-    scanf("%d", &patientAges[patientCount]);
+        strcspn(patientNames[patientCount],"\n")
+    ]='\0';
+
+    do
+    {
+        printf("\nEnter the age(Year) : ");
+        scanf("%d",&patientAges[patientCount]);
+
+        if(patientAges[patientCount] <0 ||
+                patientAges[patientCount] >120)
+        {
+            printf("\n\tInvalid age! Enter an age between 0 and 120.\n");
+        }
+
+    }
+    while(patientAges[patientCount] <0 ||
+            patientAges[patientCount]>120);
 
     printf("\nEmergency / Triage Level: \n\n");
     printf("\t1.Normal\n");
@@ -310,7 +323,7 @@ void displayEmergency()
     printf(" Priority         Patient Name      Urgency  Level");
     printf("\n---------------------------------------------------\n");
     int count=0;
-    for(int i=0 ;i < patientCount;i++)
+    for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==3)
         {
@@ -319,7 +332,7 @@ void displayEmergency()
         }
     }
     printf("\n");
-    for(int i=0 ; i < patientCount;i++)
+    for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==2)
         {
@@ -328,7 +341,7 @@ void displayEmergency()
         }
     }
     printf("\n");
-    for(int i=0 ;i < patientCount;i++)
+    for(int i=0 ; i < patientCount; i++)
     {
         if(triageLevels[i]==1)
         {
@@ -384,7 +397,7 @@ void systemReport()
     int totalBeds = 20+10+10+5;
     int occupiedBeds =0;
 
-    for(int i=0;i < patientCount;i++)
+    for(int i=0; i < patientCount; i++)
     {
 
         if(wards[i] >0)
@@ -493,9 +506,6 @@ void systemReport()
     printf("\n===============================================================\n");
     printf("                  END OF SYSTEM REPORT\n");
     printf("===============================================================\n");
-
-    printf("\nPress Enter to return to Main Menu...");
-    getchar();
     char choice;
     while(1)
     {
@@ -755,33 +765,14 @@ void saveBedStatus()
         return;
     }
 
-    for(int ward=0;ward<4;ward++)
+    for(int ward=0; ward<4; ward++)
     {
-        for(int bed=0;bed < 20;bed++)
+        for(int bed=0; bed < 20; bed++)
         {
             fprintf(file, "%d ",bedOccupancy[ward][bed]);
         }
 
         fprintf(file,"\n");
-    }
-
-    fclose(file);
-}
-void loadBedStatus()
-{
-    FILE *file=fopen("beds_status.txt","r");
-
-    if(file==NULL)
-    {
-        return;
-    }
-
-    for(int ward = 0; ward < 4;ward++)
-    {
-        for(int bed=0;bed < 20;bed++)
-        {
-            fscanf(file, "%d",&bedOccupancy[ward][bed]);
-        }
     }
 
     fclose(file);
@@ -845,8 +836,9 @@ void loadNextPatientID()
 
     fclose(file);
 }
-void mainMenu(){
-printf("\===================================================================\n");
+void mainMenu()
+{
+    printf("\===================================================================\n");
     printf("\t\tHospital Resource Allocating System");
     printf("\n===================================================================\n");
     printf("\n\n\t\t\tMain Menu\n");
@@ -885,7 +877,7 @@ printf("\===================================================================\n")
         case 5:
             saveBedStatus();
             printf("Saving data and exiting...\n");
-            break;
+            return;
 
         default:
             printf("\n\tInvalid Input! Please enter 1-5.\n");
