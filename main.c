@@ -26,6 +26,8 @@ int dailyPatientCap[4]=
 };
 
 int patientCount=0;
+int nextPatientID=1000;
+
 float billAmount[MAX_PATIENTS];
 int bedOccupancy[4][20]= {0};
 
@@ -45,9 +47,11 @@ float calcAgeDiscount(int age,float total);
 void saveBedStatus();
 void loadBedStatus();
 void savePatientRecord();
+void loadNextPatientID();
 int main()
 {
     loadBedStatus();
+    loadNextPatientID();
     printf("\===================================================================\n");
     printf("\t\tHospital Resource Allocating System");
     printf("\n===================================================================\n");
@@ -581,7 +585,7 @@ void registrationSummary()
     printf("\n\n-------------------------------------------------");
     printf("\n         Patient Registered Successfully           ");
     printf("\n---------------------------------------------------");
-    printf("\n\nPatient ID              : PAT-%d",1000+patientCount);
+    printf("\n\nPatient ID              : PAT-%d",nextPatientID);
     printf("\nEstiimated Waiting time : %d mins",calcEstimatedWaitingTime(dailyPatientCount[specialties[patientCount]-1],specialties[patientCount]));
     calcDailyPatientCount(specialties[patientCount]);
 
@@ -751,7 +755,7 @@ void savePatientRecord()
             "Ward: %d | "
             "Days: %d | "
             "Final Bill: LKR %.2f\n",
-            1000+patientCount,
+            nextPatientID,
             patientNames[patientCount],
             patientAges[patientCount],
             specialties[patientCount],
@@ -759,5 +763,35 @@ void savePatientRecord()
             wards[patientCount],
             daysAdmitted[patientCount],
             billAmount[patientCount]);
+    fclose(file);
+    nextPatientID++;
+}
+void loadNextPatientID()
+{
+    FILE *file=fopen("patient_records.txt","r");
+
+    if(file==NULL)
+    {
+        nextPatientID=1000;
+        return;
+    }
+
+    char line[300];
+    int id;
+    int lastID = 999;
+
+    while(fgets(line,sizeof(line),file))
+    {
+        if(sscanf(line,"Patient ID: PAT-%d",&id)==1)
+        {
+            if(id>lastID)
+            {
+                lastID=id;
+            }
+        }
+    }
+
+    nextPatientID=lastID+1;
+
     fclose(file);
 }
