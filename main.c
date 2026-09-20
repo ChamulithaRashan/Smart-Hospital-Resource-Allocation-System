@@ -49,6 +49,7 @@ void loadBedStatus();
 void savePatientRecord();
 void loadNextPatientID();
 void mainMenu();
+
 int main()
 {
     loadNextPatientID();
@@ -781,13 +782,11 @@ void saveBedStatus()
 void savePatientRecord()
 {
     FILE *file=fopen("patient_records.txt","a");
-
     if(file == NULL)
     {
         printf("Error opening patient_records.txt\n");
         return;
     }
-
     fprintf(file,
             "Patient ID: PAT-%d | "
             "Name: %s | "
